@@ -1,0 +1,94 @@
+{
+  "curtain": {
+    "tapToContinue": "Tap to continue",
+    "invitation": "You are cordially invited to celebrate the wedding of",
+    "names": "Yanese & Steve"
+  },
+  "reveal": {
+    "heading": "Reveal",
+    "scratchHint": "Scratch all three circles to continue",
+    "scratchSubtitle": "Scratch to discover the date",
+    "weddingAnnouncement": "We're getting married!",
+    "day": "10",
+    "month": "Sept",
+    "year": "2027"
+  },
+  "countdown": {
+    "title": "Countdown",
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Min",
+    "seconds": "Sec",
+    "untilTheBigDay": "until the big day"
+  },
+  "venue": {
+    "celebrationAt": "The celebration will take place at",
+    "name": "Villa Medicea di Artimino",
+    "address1": "Via di Papa Leone X, 28",
+    "address2": "Artimino, Florencia",
+    "date": "September 10, 2027",
+    "receptionToFollow": "Reception to Follow"
+  },
+  "menu": {
+    "aperitivo": "Aperitivo",
+    "aperitivoDesc": "Selection of Tuscan antipasti",
+    "aperitivoDetail": "Bruschetta, crostini & mixed cold cuts",
+    "primo": "Primo",
+    "primoDesc": "Risotto with black truffle from Norcia",
+    "primoDetail": "with 24-month Parmigiano Reggiano",
+    "secondo": "Secondo",
+    "secondoDesc": "Grilled beef fillet",
+    "secondoDetail": "with red wine sauce and seasonal vegetables",
+    "dolce": "Dolce",
+    "dolceDesc": "Wedding cake with mascarpone cream",
+    "dolceDetail": "and fresh wild berries",
+    "wines": "Wines of the Estate"
+  },
+  "dresscode": {
+    "title": "Dress Code",
+    "description": "We invite you to dress elegantly and formally to celebrate this special day with us.",
+    "formalAttire": "Formal Attire",
+    "avoidWhite": "Please avoid wearing white"
+  },
+  "gifts": {
+    "registry": "Wedding registry",
+    "title": "Gifts",
+    "message": "Your presence is the best gift we could receive. However, if you wish to contribute to our new life together, you can do so via bank transfer.",
+    "withLove": "With all our love",
+    "bankDetails": "Bank details",
+    "accountHolder": "ACCOUNT HOLDER: YANESE & STEVE",
+    "iban": "IBAN: ES00 0000 0000 0000 0000 0000",
+    "reference": "REFERENCE: Yanese & Steve Wedding"
+  },
+  "transport": {
+    "howToGetThere": "How to get there",
+    "title": "Transport",
+    "description": "We have organized buses from the center of Florence to the villa so you can enjoy the celebration without worries.",
+    "busDeparture": "Bus departure",
+    "departurePoint": "Piazza della Signoria",
+    "departureTime": "16:00h",
+    "returnToFlorence": "Return to Florence",
+    "returnTime": "02:00h",
+    "rsvpNote": "Please indicate in your RSVP if you need transport"
+  },
+  "rsvp": {
+    "info": "This form is fully customizable to your needs",
+    "title": "Confirm your attendance",
+    "fullName": "Full Name *",
+    "namePlaceholder": "Your name",
+    "email": "Email (optional)",
+    "emailPlaceholder": "your@email.com",
+    "attendance": "Will you attend? *",
+    "yesAttend": "Yes, I'll be there!",
+    "noAttend": "No, I can't make it",
+    "message": "Message for the couple (optional)",
+    "messagePlaceholder": "Write us a few words...",
+    "confirm": "Confirm",
+    "thankYouMessage": "Thank you for your response!"
+  },
+  "thankyou": {
+    "title": "Thank You",
+    "message": "For joining us on this special day. Your presence is the best gift we could receive.",
+    "names": "Yanese & Steve"
+  }
+}

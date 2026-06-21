@@ -1,0 +1,94 @@
+{
+  "curtain": {
+    "tapToContinue": "點擊繼續",
+    "invitation": "誠摯邀請您蒞臨",
+    "names": "Yanese & Steve 的婚禮"
+  },
+  "reveal": {
+    "heading": "揭曉",
+    "scratchHint": "刮開三個圓圈以繼續",
+    "scratchSubtitle": "刮開以揭曉日期",
+    "weddingAnnouncement": "我們要結婚了！",
+    "day": "10",
+    "month": "九月",
+    "year": "2027"
+  },
+  "countdown": {
+    "title": "倒數計時",
+    "days": "天",
+    "hours": "時",
+    "minutes": "分",
+    "seconds": "秒",
+    "untilTheBigDay": "距離大日子"
+  },
+  "venue": {
+    "celebrationAt": "婚禮將於以下地點舉行",
+    "name": "Villa Medicea di Artimino",
+    "address1": "Via di Papa Leone X, 28",
+    "address2": "Artimino, Florencia",
+    "date": "2027年9月10日",
+    "receptionToFollow": "隨後舉行宴會"
+  },
+  "menu": {
+    "aperitivo": "開胃菜",
+    "aperitivoDesc": "托斯卡納精選前菜",
+    "aperitivoDetail": "意式烤麵包、脆餅與綜合冷盤",
+    "primo": "第一道菜",
+    "primoDesc": "諾爾恰黑松露燉飯",
+    "primoDetail": "佐24個月熟成帕馬森乾酪",
+    "secondo": "第二道菜",
+    "secondoDesc": "香煎牛柳",
+    "secondoDetail": "佐紅酒醬汁與時令蔬菜",
+    "dolce": "甜點",
+    "dolceDesc": "馬斯卡彭奶油婚禮蛋糕",
+    "dolceDetail": "佐新鮮野莓",
+    "wines": "莊園精選葡萄酒"
+  },
+  "dresscode": {
+    "title": "服裝要求",
+    "description": "誠邀各位賓客穿著優雅正式服裝，與我們共度這個特別的日子。",
+    "formalAttire": "正式服裝",
+    "avoidWhite": "請避免穿著白色服裝"
+  },
+  "gifts": {
+    "registry": "婚禮禮簿",
+    "title": "禮物",
+    "message": "您的出席就是我們收到最好的禮物。若您希望為我們的新生活送上祝福，可以透過銀行轉帳方式。",
+    "withLove": "衷心感謝",
+    "bankDetails": "銀行資料",
+    "accountHolder": "帳戶名稱：YANESE & STEVE",
+    "iban": "IBAN：ES00 0000 0000 0000 0000 0000",
+    "reference": "備註：Yanese & Steve Wedding"
+  },
+  "transport": {
+    "howToGetThere": "如何前往",
+    "title": "交通安排",
+    "description": "我們安排了大巴從佛羅倫斯市中心前往莊園，讓各位賓客無憂享受慶典。",
+    "busDeparture": "巴士出發",
+    "departurePoint": "Piazza della Signoria",
+    "departureTime": "16:00",
+    "returnToFlorence": "返回佛羅倫斯",
+    "returnTime": "02:00",
+    "rsvpNote": "如需安排交通，請在回覆時註明"
+  },
+  "rsvp": {
+    "info": "此表格可完全按您的需求自訂",
+    "title": "確認出席",
+    "fullName": "姓名 *",
+    "namePlaceholder": "您的姓名",
+    "email": "電子郵件（選填）",
+    "emailPlaceholder": "your@email.com",
+    "attendance": "您會出席嗎？ *",
+    "yesAttend": "會，我會到！",
+    "noAttend": "抱歉，無法出席",
+    "message": "給新人的祝福（選填）",
+    "messagePlaceholder": "寫下幾句話...",
+    "confirm": "確認",
+    "thankYouMessage": "感謝您的回覆！"
+  },
+  "thankyou": {
+    "title": "謝謝",
+    "message": "感謝您參與這個特別的日子。您的出席就是我們收到最好的禮物。",
+    "names": "Yanese & Steve"
+  }
+}
