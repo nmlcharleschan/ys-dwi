@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type Stage = 'image' | 'video'
@@ -11,6 +11,17 @@ export default function CurtainSection() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
   const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (video) {
+      video.load()
+    }
+    const audio = audioRef.current
+    if (audio) {
+      audio.load()
+    }
+  }, [])
 
   const advanceToVideo = () => {
     if (stage !== 'image') return
@@ -139,6 +150,7 @@ export default function CurtainSection() {
         className={`absolute inset-0 w-full h-full object-cover ${stage === 'video' ? 'block' : 'hidden'}`}
         style={{ zIndex: 1 }}
         playsInline
+        muted
         preload="auto"
         tabIndex={-1}
       >
