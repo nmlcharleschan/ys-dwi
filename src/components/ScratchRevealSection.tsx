@@ -46,7 +46,7 @@ function ScratchCircle({
 
     const cx = s / 2
     const cy = s / 2
-    const r = s / 2 - 1
+    const r = s / 2 - 4
 
     sizeRef.current = { s, cx, cy, r }
 
