@@ -6,6 +6,7 @@ type Stage = 'image' | 'video'
 export default function CurtainSection() {
   const { t } = useTranslation()
   const [stage, setStage] = useState<Stage>('image')
+  const [overlayVisible, setOverlayVisible] = useState(false)
   const [muted, setMuted] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -18,6 +19,9 @@ export default function CurtainSection() {
         if (audioRef.current) {
           audioRef.current.play().catch(() => {})
         }
+        setTimeout(() => {
+          setOverlayVisible(true)
+        }, 1000)
       }, 100)
     }
   }
@@ -35,6 +39,15 @@ export default function CurtainSection() {
       setMuted(!muted)
     }
   }
+
+  const fadeStyle = (visible: boolean): React.CSSProperties => ({
+    zIndex: 2,
+    opacity: visible ? 1 : 0,
+    pointerEvents: visible ? 'auto' : 'none',
+    transitionProperty: 'opacity',
+    transitionDuration: '2500ms',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  })
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-white">
@@ -68,14 +81,16 @@ export default function CurtainSection() {
           <img
             src="./assets/curtain-closed.jpg"
             alt="Curtain"
-            className="absolute inset-0 w-full h-full object-cover z-10"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ zIndex: 1 }}
           />
           <button
             type="button"
             onClick={advanceToVideo}
             onKeyDown={handleKeyDown}
             aria-label={t('curtain.tapToContinue')}
-            className="absolute inset-0 w-full h-full cursor-pointer border-none bg-transparent z-20"
+            className="absolute inset-0 w-full h-full cursor-pointer border-none bg-transparent"
+            style={{ zIndex: 2 }}
           >
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <div className="relative flex items-center justify-center">
@@ -98,56 +113,52 @@ export default function CurtainSection() {
         </>
       )}
 
-      {stage === 'video' && (
-        <>
-          <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 1 }}>
-            <div className="flex flex-col items-center text-center max-w-[55%] md:max-w-[45%] lg:max-w-[40%] px-4 pt-4">
-              <p className="font-display text-[8px] md:text-[10px] tracking-[0.15em] uppercase mb-4" style={{ color: '#5C2018' }}>
-                {t('curtain.invitation')}
-              </p>
-              <h1 className="font-script text-6xl md:text-7xl lg:text-8xl mb-0 leading-none" style={{ color: '#5C2018' }}>
-                Yanese
-              </h1>
-              <span className="font-script text-3xl md:text-4xl" style={{ color: '#5C2018' }}>
-                &
-              </span>
-              <h1 className="font-script text-6xl md:text-7xl lg:text-8xl mb-10 leading-none" style={{ color: '#5C2018' }}>
-                Steve
-              </h1>
-            </div>
-          </div>
-
-          <div className="absolute bottom-40 left-0 right-0 flex justify-center px-4" style={{ zIndex: 1 }}>
-            <p className="font-display text-[11px] md:text-sm tracking-[0.12em] uppercase leading-relaxed text-center max-w-[85%] md:max-w-[70%] lg:max-w-[60%]" style={{ color: '#5C2018' }}>
-              {t('curtain.subtitle')}
-            </p>
-          </div>
-
-          <div className="absolute bottom-8 left-0 right-0 flex justify-center" style={{ zIndex: 1 }}>
-            <div className="flex flex-col items-center">
-              <p className="font-display text-[10px] tracking-[0.2em] uppercase mb-2" style={{ color: '#5C2018' }}>
-                {t('curtain.scroll')}
-              </p>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5C2018" strokeWidth="1.5">
-                <title>Scroll down</title>
-                <path d="M12 5v14M5 12l7 7 7-7" />
-              </svg>
-            </div>
-          </div>
-        </>
-      )}
-
       <video
         ref={videoRef}
         src="./assets/curtain-video.mp4"
         className={`absolute inset-0 w-full h-full object-cover ${stage === 'video' ? 'block' : 'hidden'}`}
-        style={{ mixBlendMode: 'multiply' as React.CSSProperties['mixBlendMode'], zIndex: 2 }}
+        style={{ zIndex: 1 }}
         playsInline
         preload="auto"
         tabIndex={-1}
       >
         <track kind="captions" />
       </video>
+
+      <div className="absolute inset-0 flex items-center justify-center" style={fadeStyle(overlayVisible)}>
+        <div className="flex flex-col items-center text-center max-w-[55%] md:max-w-[45%] lg:max-w-[40%] px-4 pt-4">
+          <p className="font-display text-[8px] md:text-[10px] tracking-[0.15em] uppercase mb-4" style={{ color: '#5C2018' }}>
+            {t('curtain.invitation')}
+          </p>
+          <h1 className="font-script text-6xl md:text-7xl lg:text-8xl mb-0 leading-none" style={{ color: '#5C2018' }}>
+            Yanese
+          </h1>
+          <span className="font-script text-3xl md:text-4xl" style={{ color: '#5C2018' }}>
+            &
+          </span>
+          <h1 className="font-script text-6xl md:text-7xl lg:text-8xl mb-10 leading-none" style={{ color: '#5C2018' }}>
+            Steve
+          </h1>
+        </div>
+      </div>
+
+      <div className="absolute bottom-40 left-0 right-0 flex justify-center px-4" style={fadeStyle(overlayVisible)}>
+        <p className="font-display text-[11px] md:text-sm tracking-[0.12em] uppercase leading-relaxed text-center max-w-[85%] md:max-w-[70%] lg:max-w-[60%]" style={{ color: '#5C2018' }}>
+          {t('curtain.subtitle')}
+        </p>
+      </div>
+
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center" style={fadeStyle(overlayVisible)}>
+        <div className="flex flex-col items-center">
+          <p className="font-display text-[10px] tracking-[0.2em] uppercase mb-2" style={{ color: '#5C2018' }}>
+            {t('curtain.scroll')}
+          </p>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5C2018" strokeWidth="1.5">
+            <title>Scroll down</title>
+            <path d="M12 5v14M5 12l7 7 7-7" />
+          </svg>
+        </div>
+      </div>
     </section>
   )
 }
