@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-type Stage = 'image' | 'video' | 'overlay'
+type Stage = 'image' | 'video'
 
 export default function CurtainSection() {
   const { t } = useTranslation()
   const [stage, setStage] = useState<Stage>('image')
+  const [overlayOpacity, setOverlayOpacity] = useState(0)
   const [muted, setMuted] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -18,6 +19,9 @@ export default function CurtainSection() {
         if (audioRef.current) {
           audioRef.current.play().catch(() => {})
         }
+        setTimeout(() => {
+          setOverlayOpacity(1)
+        }, 600)
       }, 100)
     }
   }
@@ -27,10 +31,6 @@ export default function CurtainSection() {
       e.preventDefault()
       advanceToVideo()
     }
-  }
-
-  const handleVideoEnded = () => {
-    setStage('overlay')
   }
 
   const toggleMute = () => {
@@ -43,7 +43,6 @@ export default function CurtainSection() {
   return (
     <section className="relative h-screen w-full overflow-hidden">
       <audio ref={audioRef} src="./assets/intro-music.mp3" loop preload="auto" />
-
 
       {stage !== 'image' && (
         <button
@@ -136,18 +135,20 @@ export default function CurtainSection() {
       <video
         ref={videoRef}
         src="./assets/curtain-video.mp4"
-        className={`absolute inset-0 w-full h-full object-cover ${stage === 'video' || stage === 'overlay' ? 'block' : 'hidden'}`}
+        className={`absolute inset-0 w-full h-full object-cover ${stage === 'video' ? 'block' : 'hidden'}`}
         playsInline
         preload="auto"
         tabIndex={-1}
-        onEnded={handleVideoEnded}
       >
         <track kind="captions" />
       </video>
 
-      {stage === 'overlay' && (
+      {stage === 'video' && (
         <>
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div
+            className="absolute inset-0 flex items-center justify-center transition-opacity duration-[2000ms] ease-out"
+            style={{ opacity: overlayOpacity }}
+          >
             <div className="flex flex-col items-center text-center max-w-[55%] md:max-w-[45%] lg:max-w-[40%] px-4 pt-4">
               <p
                 className="font-display text-[8px] md:text-[10px] tracking-[0.15em] uppercase mb-4"
@@ -176,7 +177,10 @@ export default function CurtainSection() {
             </div>
           </div>
 
-          <div className="absolute bottom-40 left-0 right-0 flex justify-center px-4">
+          <div
+            className="absolute bottom-40 left-0 right-0 flex justify-center px-4 transition-opacity duration-[2000ms] ease-out"
+            style={{ opacity: overlayOpacity }}
+          >
             <p
               className="font-display text-[11px] md:text-sm tracking-[0.12em] uppercase leading-relaxed text-center max-w-[85%] md:max-w-[70%] lg:max-w-[60%]"
               style={{ color: '#5C2018' }}
@@ -185,7 +189,10 @@ export default function CurtainSection() {
             </p>
           </div>
 
-          <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+          <div
+            className="absolute bottom-8 left-0 right-0 flex justify-center transition-opacity duration-[2000ms] ease-out"
+            style={{ opacity: overlayOpacity }}
+          >
             <div className="flex flex-col items-center">
               <p
                 className="font-display text-[10px] tracking-[0.2em] uppercase mb-2"

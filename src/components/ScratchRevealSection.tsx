@@ -43,34 +43,54 @@ function ScratchCircle({
     canvas.style.height = `${CIRCLE_SIZE}px`
     ctx.scale(dpr, dpr)
 
+    const cx = CIRCLE_SIZE / 2
+    const cy = CIRCLE_SIZE / 2
+
+    ctx.save()
     ctx.beginPath()
-    ctx.arc(CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, SCRATCH_RADIUS, 0, Math.PI * 2)
-    ctx.fillStyle = '#5C2018'
+    ctx.arc(cx, cy, SCRATCH_RADIUS, 0, Math.PI * 2)
+    ctx.clip()
+
+    const baseGrad = ctx.createRadialGradient(cx - 8, cy - 10, 3, cx, cy, SCRATCH_RADIUS)
+    baseGrad.addColorStop(0, '#fce4b8')
+    baseGrad.addColorStop(0.15, '#fbd298')
+    baseGrad.addColorStop(0.4, '#efca86')
+    baseGrad.addColorStop(0.7, '#e2b97a')
+    baseGrad.addColorStop(0.9, '#d4a84b')
+    baseGrad.addColorStop(1, '#c4953a')
+    ctx.fillStyle = baseGrad
     ctx.fill()
 
-    for (let i = 0; i < 8; i++) {
-      const angle = (i / 8) * Math.PI * 2
-      const x = CIRCLE_SIZE / 2 + Math.cos(angle) * SCRATCH_RADIUS * 0.7
-      const y = CIRCLE_SIZE / 2 + Math.sin(angle) * SCRATCH_RADIUS * 0.7
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2
+      const rx = cx + Math.cos(angle) * SCRATCH_RADIUS * 0.7
+      const ry = cy + Math.sin(angle) * SCRATCH_RADIUS * 0.7
       ctx.beginPath()
-      ctx.moveTo(CIRCLE_SIZE / 2, CIRCLE_SIZE / 2)
-      ctx.lineTo(x, y)
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)'
-      ctx.lineWidth = 1
+      ctx.moveTo(cx, cy)
+      ctx.lineTo(rx, ry)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)'
+      ctx.lineWidth = 0.8
       ctx.stroke()
     }
 
-    const gradient = ctx.createRadialGradient(
-      CIRCLE_SIZE / 2 - 15, CIRCLE_SIZE / 2 - 15, 5,
-      CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, SCRATCH_RADIUS
+    const shineGrad = ctx.createLinearGradient(
+      cx - SCRATCH_RADIUS * 0.7, cy - SCRATCH_RADIUS * 0.7,
+      cx + SCRATCH_RADIUS * 0.3, cy + SCRATCH_RADIUS * 0.3
     )
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.25)')
-    gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.05)')
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.15)')
-    ctx.beginPath()
-    ctx.arc(CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, SCRATCH_RADIUS, 0, Math.PI * 2)
-    ctx.fillStyle = gradient
+    shineGrad.addColorStop(0, 'rgba(255, 255, 255, 0.18)')
+    shineGrad.addColorStop(0.35, 'rgba(255, 255, 255, 0.04)')
+    shineGrad.addColorStop(0.65, 'rgba(0, 0, 0, 0.02)')
+    shineGrad.addColorStop(1, 'rgba(0, 0, 0, 0.12)')
+    ctx.fillStyle = shineGrad
     ctx.fill()
+
+    ctx.beginPath()
+    ctx.arc(cx, cy, SCRATCH_RADIUS, 0, Math.PI * 2)
+    ctx.strokeStyle = 'rgba(212, 168, 75, 0.4)'
+    ctx.lineWidth = 1.5
+    ctx.stroke()
+
+    ctx.restore()
   }, [])
 
   const getPos = useCallback(
@@ -128,11 +148,17 @@ function ScratchCircle({
       const dy = y - CIRCLE_SIZE / 2
       if (dx * dx + dy * dy > SCRATCH_RADIUS * SCRATCH_RADIUS) return
 
+      ctx.save()
+      ctx.beginPath()
+      ctx.arc(CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, SCRATCH_RADIUS, 0, Math.PI * 2)
+      ctx.clip()
+
       ctx.globalCompositeOperation = 'destination-out'
       ctx.beginPath()
       ctx.arc(x, y, 25, 0, Math.PI * 2)
       ctx.fill()
-      ctx.globalCompositeOperation = 'source-over'
+
+      ctx.restore()
 
       checkProgress()
     },
