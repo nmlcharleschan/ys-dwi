@@ -3,9 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 
-const CIRCLE_SIZE = 150
-const SCRATCH_RADIUS = 65
 const REVEAL_THRESHOLD = 0.6
+const BRUSH_SIZE = 25
 
 interface ScratchState {
   cleared: boolean
@@ -26,6 +25,7 @@ function ScratchCircle({
   const isDrawing = useRef(false)
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null)
   const clearedRef = useRef(false)
+  const sizeRef = useRef({ s: 0, cx: 0, cy: 0, r: 0 })
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -36,58 +36,58 @@ function ScratchCircle({
 
     ctxRef.current = ctx
 
+    const rect = canvas.getBoundingClientRect()
     const dpr = window.devicePixelRatio || 1
-    canvas.width = CIRCLE_SIZE * dpr
-    canvas.height = CIRCLE_SIZE * dpr
-    canvas.style.width = `${CIRCLE_SIZE}px`
-    canvas.style.height = `${CIRCLE_SIZE}px`
+    const s = rect.width
+
+    canvas.width = s * dpr
+    canvas.height = s * dpr
     ctx.scale(dpr, dpr)
 
-    const cx = CIRCLE_SIZE / 2
-    const cy = CIRCLE_SIZE / 2
+    const cx = s / 2
+    const cy = s / 2
+    const r = s / 2 - 1
+
+    sizeRef.current = { s, cx, cy, r }
 
     ctx.save()
     ctx.beginPath()
-    ctx.arc(cx, cy, SCRATCH_RADIUS, 0, Math.PI * 2)
+    ctx.arc(cx, cy, r, 0, Math.PI * 2)
     ctx.clip()
 
-    const baseGrad = ctx.createRadialGradient(cx - 8, cy - 10, 3, cx, cy, SCRATCH_RADIUS)
-    baseGrad.addColorStop(0, '#fce4b8')
-    baseGrad.addColorStop(0.15, '#fbd298')
-    baseGrad.addColorStop(0.4, '#efca86')
-    baseGrad.addColorStop(0.7, '#e2b97a')
-    baseGrad.addColorStop(0.9, '#d4a84b')
-    baseGrad.addColorStop(1, '#c4953a')
-    ctx.fillStyle = baseGrad
+    if (ctx.createConicGradient) {
+      const conic = ctx.createConicGradient(0, cx, cy)
+      conic.addColorStop(0, '#f3d082')
+      conic.addColorStop(0.125, '#dfb256')
+      conic.addColorStop(0.25, '#f9dfa7')
+      conic.addColorStop(0.375, '#c19438')
+      conic.addColorStop(0.5, '#f3d082')
+      conic.addColorStop(0.625, '#dfb256')
+      conic.addColorStop(0.75, '#f9dfa7')
+      conic.addColorStop(0.875, '#c19438')
+      conic.addColorStop(1, '#f3d082')
+      ctx.fillStyle = conic
+    } else {
+      const fallback = ctx.createRadialGradient(cx - r * 0.2, cy - r * 0.3, 2, cx, cy, r)
+      fallback.addColorStop(0, '#f9dfa7')
+      fallback.addColorStop(0.3, '#f3d082')
+      fallback.addColorStop(0.6, '#dfb256')
+      fallback.addColorStop(1, '#c19438')
+      ctx.fillStyle = fallback
+    }
     ctx.fill()
 
-    for (let i = 0; i < 12; i++) {
-      const angle = (i / 12) * Math.PI * 2
-      const rx = cx + Math.cos(angle) * SCRATCH_RADIUS * 0.7
-      const ry = cy + Math.sin(angle) * SCRATCH_RADIUS * 0.7
-      ctx.beginPath()
-      ctx.moveTo(cx, cy)
-      ctx.lineTo(rx, ry)
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)'
-      ctx.lineWidth = 0.8
-      ctx.stroke()
-    }
-
-    const shineGrad = ctx.createLinearGradient(
-      cx - SCRATCH_RADIUS * 0.7, cy - SCRATCH_RADIUS * 0.7,
-      cx + SCRATCH_RADIUS * 0.3, cy + SCRATCH_RADIUS * 0.3
-    )
-    shineGrad.addColorStop(0, 'rgba(255, 255, 255, 0.18)')
-    shineGrad.addColorStop(0.35, 'rgba(255, 255, 255, 0.04)')
-    shineGrad.addColorStop(0.65, 'rgba(0, 0, 0, 0.02)')
-    shineGrad.addColorStop(1, 'rgba(0, 0, 0, 0.12)')
-    ctx.fillStyle = shineGrad
+    const radial = ctx.createRadialGradient(cx - r * 0.15, cy - r * 0.15, r * 0.05, cx, cy, r)
+    radial.addColorStop(0, 'rgba(255, 255, 255, 0.22)')
+    radial.addColorStop(0.7, 'rgba(0, 0, 0, 0.04)')
+    radial.addColorStop(1, 'rgba(0, 0, 0, 0.14)')
+    ctx.fillStyle = radial
     ctx.fill()
 
     ctx.beginPath()
-    ctx.arc(cx, cy, SCRATCH_RADIUS, 0, Math.PI * 2)
-    ctx.strokeStyle = 'rgba(212, 168, 75, 0.4)'
-    ctx.lineWidth = 1.5
+    ctx.arc(cx, cy, r, 0, Math.PI * 2)
+    ctx.strokeStyle = 'rgba(212, 168, 75, 0.35)'
+    ctx.lineWidth = 1
     ctx.stroke()
 
     ctx.restore()
@@ -114,17 +114,18 @@ function ScratchCircle({
     const ctx = ctxRef.current
     if (!canvas || !ctx) return
 
-    const imageData = ctx.getImageData(0, 0, CIRCLE_SIZE, CIRCLE_SIZE)
+    const { s, r } = sizeRef.current
+    const imageData = ctx.getImageData(0, 0, s, s)
     let transparentPixels = 0
     let totalCirclePixels = 0
 
-    for (let py = 0; py < CIRCLE_SIZE; py++) {
-      for (let px = 0; px < CIRCLE_SIZE; px++) {
-        const dx = px - CIRCLE_SIZE / 2
-        const dy = py - CIRCLE_SIZE / 2
-        if (dx * dx + dy * dy <= SCRATCH_RADIUS * SCRATCH_RADIUS) {
+    for (let py = 0; py < s; py++) {
+      for (let px = 0; px < s; px++) {
+        const dx = px - s / 2
+        const dy = py - s / 2
+        if (dx * dx + dy * dy <= r * r) {
           totalCirclePixels++
-          const alpha = imageData.data[(py * CIRCLE_SIZE + px) * 4 + 3]
+          const alpha = imageData.data[(py * s + px) * 4 + 3]
           if (alpha === 0) transparentPixels++
         }
       }
@@ -144,18 +145,19 @@ function ScratchCircle({
       const ctx = ctxRef.current
       if (!ctx || clearedRef.current) return
 
-      const dx = x - CIRCLE_SIZE / 2
-      const dy = y - CIRCLE_SIZE / 2
-      if (dx * dx + dy * dy > SCRATCH_RADIUS * SCRATCH_RADIUS) return
+      const { cx, cy, r } = sizeRef.current
+      const dx = x - cx
+      const dy = y - cy
+      if (dx * dx + dy * dy > r * r) return
 
       ctx.save()
       ctx.beginPath()
-      ctx.arc(CIRCLE_SIZE / 2, CIRCLE_SIZE / 2, SCRATCH_RADIUS, 0, Math.PI * 2)
+      ctx.arc(cx, cy, r, 0, Math.PI * 2)
       ctx.clip()
 
       ctx.globalCompositeOperation = 'destination-out'
       ctx.beginPath()
-      ctx.arc(x, y, 25, 0, Math.PI * 2)
+      ctx.arc(x, y, BRUSH_SIZE, 0, Math.PI * 2)
       ctx.fill()
 
       ctx.restore()
@@ -197,8 +199,8 @@ function ScratchCircle({
         </div>
         <canvas
           ref={canvasRef}
-          width={CIRCLE_SIZE}
-          height={CIRCLE_SIZE}
+          width={300}
+          height={300}
           className={`absolute inset-0 w-full h-full cursor-pointer transition-opacity duration-700 ${
             state.cleared ? 'opacity-0' : 'opacity-100'
           }`}
