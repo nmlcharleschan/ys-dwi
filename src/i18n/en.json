@@ -2,7 +2,9 @@
   "curtain": {
     "tapToContinue": "Tap to continue",
     "invitation": "You are cordially invited to celebrate the wedding of",
-    "names": "Yanese & Steve"
+    "names": "Yanese & Steve",
+    "subtitle": "We would like to invite you to celebrate with us the most special day of our lives. It would be an honor to have you present at this important moment.",
+    "scroll": "Scroll"
   },
   "reveal": {
     "heading": "Reveal",

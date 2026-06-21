@@ -2,7 +2,9 @@
   "curtain": {
     "tapToContinue": "點擊繼續",
     "invitation": "誠摯邀請您蒞臨",
-    "names": "Yanese & Steve 的婚禮"
+    "names": "Yanese & Steve 的婚禮",
+    "subtitle": "誠邀您與我們一同慶祝人生中最特別的一天。您的出席將是我們莫大的榮幸。",
+    "scroll": "向下滾動"
   },
   "reveal": {
     "heading": "揭曉",
