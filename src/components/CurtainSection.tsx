@@ -10,19 +10,39 @@ export default function CurtainSection() {
   const [muted, setMuted] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
+  const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const advanceToVideo = () => {
-    if (stage === 'image') {
-      setStage('video')
-      setTimeout(() => {
-        videoRef.current?.play()
-        if (audioRef.current) {
-          audioRef.current.play().catch(() => {})
-        }
-        setTimeout(() => {
-          setOverlayVisible(true)
-        }, 1000)
-      }, 100)
+    if (stage !== 'image') return
+    setStage('video')
+
+    const video = videoRef.current
+    if (!video) return
+
+    let overlayStarted = false
+
+    const startOverlayFade = () => {
+      if (overlayStarted) return
+      overlayStarted = true
+      video.removeEventListener('playing', startOverlayFade)
+      if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current)
+      overlayTimerRef.current = setTimeout(() => {
+        setOverlayVisible(true)
+      }, 800)
+    }
+
+    video.addEventListener('playing', startOverlayFade)
+
+    overlayTimerRef.current = setTimeout(() => {
+      setOverlayVisible(true)
+    }, 4000)
+
+    video.play().catch(() => {
+      setOverlayVisible(true)
+    })
+
+    if (audioRef.current) {
+      audioRef.current.play().catch(() => {})
     }
   }
 
