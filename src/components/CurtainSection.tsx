@@ -7,6 +7,7 @@ export default function CurtainSection() {
   const { t } = useTranslation()
   const [stage, setStage] = useState<Stage>('image')
   const [overlayVisible, setOverlayVisible] = useState(false)
+  const [videoEnded, setVideoEnded] = useState(false)
   const [muted, setMuted] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -157,7 +158,10 @@ export default function CurtainSection() {
         muted
         preload="auto"
         tabIndex={-1}
-        onEnded={() => { document.body.style.overflow = '' }}
+        onEnded={() => {
+          setVideoEnded(true)
+          document.body.style.overflow = ''
+        }}
       >
         <track kind="captions" />
       </video>
@@ -185,8 +189,22 @@ export default function CurtainSection() {
         </p>
       </div>
 
-      <div className="absolute bottom-8 left-0 right-0 flex justify-center" style={fadeStyle(overlayVisible)}>
-        <div className="flex flex-col items-center">
+      <div
+        className="absolute bottom-8 left-0 right-0 flex justify-center transition-opacity"
+        style={{
+          zIndex: 2,
+          opacity: videoEnded ? 1 : 0,
+          pointerEvents: videoEnded ? 'auto' : 'none',
+          transitionDuration: '800ms',
+          transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        <div
+          className="flex flex-col items-center"
+          style={{
+            animation: videoEnded ? 'scrollBounce 2s ease-in-out infinite' : 'none',
+          }}
+        >
           <p className="font-display text-[10px] tracking-[0.2em] uppercase mb-2" style={{ color: '#5C2018' }}>
             {t('curtain.scroll')}
           </p>
