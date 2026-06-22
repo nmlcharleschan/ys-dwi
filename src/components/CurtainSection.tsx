@@ -30,7 +30,6 @@ export default function CurtainSection() {
   const advanceToVideo = () => {
     if (stage !== 'image') return
     setStage('video')
-    document.body.style.overflow = ''
 
     const video = videoRef.current
     if (!video) return
@@ -158,6 +157,7 @@ export default function CurtainSection() {
         muted
         preload="auto"
         tabIndex={-1}
+        onEnded={() => { document.body.style.overflow = '' }}
       >
         <track kind="captions" />
       </video>
