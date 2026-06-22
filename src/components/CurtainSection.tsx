@@ -21,11 +21,16 @@ export default function CurtainSection() {
     if (audio) {
       audio.load()
     }
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [])
 
   const advanceToVideo = () => {
     if (stage !== 'image') return
     setStage('video')
+    document.body.style.overflow = ''
 
     const video = videoRef.current
     if (!video) return

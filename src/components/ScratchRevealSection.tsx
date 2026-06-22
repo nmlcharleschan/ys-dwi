@@ -93,6 +93,25 @@ function ScratchCircle({
     ctx.restore()
   }, [])
 
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const preventScroll = (e: TouchEvent) => {
+      if (!clearedRef.current) {
+        e.preventDefault()
+      }
+    }
+
+    canvas.addEventListener('touchstart', preventScroll, { passive: false })
+    canvas.addEventListener('touchmove', preventScroll, { passive: false })
+
+    return () => {
+      canvas.removeEventListener('touchstart', preventScroll)
+      canvas.removeEventListener('touchmove', preventScroll)
+    }
+  }, [])
+
   const getPos = useCallback(
     (e: React.MouseEvent | React.TouchEvent | MouseEvent | Touch) => {
       const canvas = canvasRef.current
