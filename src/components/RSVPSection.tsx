@@ -5,8 +5,8 @@ import { motion } from 'framer-motion'
 export default function RSVPSection() {
   const { t } = useTranslation()
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
   const [attending, setAttending] = useState<boolean | null>(null)
+  const [transportNeeded, setTransportNeeded] = useState<boolean | null>(null)
   const [message, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
@@ -30,8 +30,8 @@ export default function RSVPSection() {
     setTimeout(() => {
       setSubmitted(false)
       setName('')
-      setEmail('')
       setAttending(null)
+      setTransportNeeded(null)
       setMessage('')
     }, 3000)
   }
@@ -128,28 +128,6 @@ export default function RSVPSection() {
               />
             </div>
 
-            {/* Email */}
-            <div>
-              <label
-                htmlFor="email"
-                className="font-body text-xs tracking-widest uppercase mb-2 block text-burgundy"
-              >
-                {t('rsvp.email')}
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t('rsvp.emailPlaceholder')}
-                className="flex h-10 w-full border px-3 py-2 text-base rounded-xl bg-white/80 focus:outline-none focus:ring-2 focus:ring-burgundy/30 focus:border-burgundy"
-                style={{
-                  borderColor: 'rgba(92, 32, 24, 0.2)',
-                  color: '#5C2018',
-                }}
-              />
-            </div>
-
             {/* Attendance */}
             <fieldset>
               <legend className="font-body text-xs tracking-widest uppercase mb-3 block text-burgundy">
@@ -181,6 +159,39 @@ export default function RSVPSection() {
                   {t('rsvp.noAttend')}
                 </button>
             </div>
+            </fieldset>
+
+            {/* Transport */}
+            <fieldset>
+              <legend className="font-body text-xs tracking-widest uppercase mb-3 block text-burgundy">
+                {t('rsvp.transportQuestion')}
+              </legend>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  type="button"
+                  onClick={() => setTransportNeeded(true)}
+                  className="flex-1 py-3 px-4 rounded-xl border-2 font-body text-sm transition-all duration-200"
+                  style={{
+                    borderColor: transportNeeded === true ? '#5C2018' : 'rgba(92, 32, 24, 0.2)',
+                    backgroundColor: transportNeeded === true ? '#5C2018' : 'transparent',
+                    color: transportNeeded === true ? '#FFFFFF' : '#5C2018',
+                  }}
+                >
+                  {t('rsvp.transportYes')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTransportNeeded(false)}
+                  className="flex-1 py-3 px-4 rounded-xl border-2 font-body text-sm transition-all duration-200"
+                  style={{
+                    borderColor: transportNeeded === false ? '#5C2018' : 'rgba(92, 32, 24, 0.2)',
+                    backgroundColor: transportNeeded === false ? '#5C2018' : 'transparent',
+                    color: transportNeeded === false ? '#FFFFFF' : '#5C2018',
+                  }}
+                >
+                  {t('rsvp.transportNo')}
+                </button>
+              </div>
             </fieldset>
 
             {/* Message */}
