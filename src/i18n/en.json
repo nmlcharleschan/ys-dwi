@@ -29,7 +29,8 @@
     "address1": "Windfield Court, No.7 Wang Kong Tsuen",
     "address2": "Sai Kung",
     "date": "November 7, 2026",
-    "receptionToFollow": "Reception to Follow"
+    "receptionToFollow": "Reception to Follow",
+    "openMap": "Open in Google Maps"
   },
   "timeline": {
     "title": "Wedding Timeline",
@@ -46,8 +47,8 @@
   },
   "dresscode": {
     "title": "Dress Code",
-    "description": "We kindly request guests wear Formal Garden Party attire on our special day.",
-    "formalAttire": "Formal Garden Party",
+    "description": "We kindly request guests wear on our special day",
+    "formalAttire": "Garden Party Attire",
     "avoidWhite": "Please avoid wearing white"
   },
   "transport": {
@@ -71,7 +72,7 @@
     "yesAttend": "Yes, I'll be there!",
     "noAttend": "No, I can't make it",
     "transportQuestion": "Will you need transport?",
-    "transportYes": "YES, I'm coming with shuttle bus",
+    "transportYes": "YES, I'm coming with shuttle",
     "transportNo": "NO, leave me alone",
     "message": "Message for the couple (optional)",
     "messagePlaceholder": "Write us a few words...",

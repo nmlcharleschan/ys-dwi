@@ -42,6 +42,34 @@ export default function VenueSection() {
       </div>
 
       <div className="text-center mb-10">
+        <a
+          href="https://maps.google.com/?q=Wooden+Fairies+Windfield+Court+No.7+Wang+Kong+Tsuen+Sai+Kung"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-body text-xs tracking-wide transition-all duration-200 hover:opacity-80"
+          style={{
+            backgroundColor: '#5C2018',
+            color: '#FFFFFF',
+          }}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          {t('venue.openMap')}
+        </a>
+      </div>
+
+      <div className="text-center mb-10">
         <p className="font-display text-2xl md:text-3xl tracking-wide text-burgundy">
           {t('venue.date')}
         </p>

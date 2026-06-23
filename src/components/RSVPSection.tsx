@@ -38,8 +38,7 @@ export default function RSVPSection() {
 
   return (
     <motion.section
-      className="py-16 px-6"
-      style={{ backgroundColor: '#FAF8F5' }}
+      className="bg-white py-16 px-6"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}

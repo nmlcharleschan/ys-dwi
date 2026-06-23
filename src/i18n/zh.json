@@ -26,10 +26,11 @@
   "venue": {
     "celebrationAt": "婚禮將於以下地點舉行",
     "name": "Wooden Fairies",
-    "address1": "Windfield Court, No.7 Wang Kong Tsuen",
+    "address1": "香港西貢橫江村7號",
     "address2": "西貢",
     "date": "2026年11月7日",
-    "receptionToFollow": "隨後舉行宴會"
+    "receptionToFollow": "隨後舉行宴會",
+    "openMap": "在 Google 地圖開啟"
   },
   "timeline": {
     "title": "婚禮流程",
@@ -46,8 +47,8 @@
   },
   "dresscode": {
     "title": "服裝要求",
-    "description": "誠邀各位賓客穿著正式花園派對服裝，與我們共度這個特別的日子。",
-    "formalAttire": "正式花園派對服裝",
+    "description": "誠邀各位賓客在這個特別的日子穿著",
+    "formalAttire": "花園派對服裝",
     "avoidWhite": "請避免穿著白色服裝"
   },
   "transport": {
