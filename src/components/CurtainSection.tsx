@@ -1,17 +1,21 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { LOADING_MESSAGES } from './CurtainLoadingMessages'
 
-type Stage = 'image' | 'video'
+type Stage = 'loading' | 'image' | 'video'
 
 export default function CurtainSection() {
   const { t } = useTranslation()
-  const [stage, setStage] = useState<Stage>('image')
+  const [stage, setStage] = useState<Stage>('loading')
   const [overlayVisible, setOverlayVisible] = useState(false)
   const [videoEnded, setVideoEnded] = useState(false)
   const [muted, setMuted] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
   const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [loadingIndex, setLoadingIndex] = useState(0)
+  const [preloadComplete, setPreloadComplete] = useState(false)
+  const loadingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     const video = videoRef.current
@@ -23,8 +27,39 @@ export default function CurtainSection() {
       audio.load()
     }
     document.body.style.overflow = 'hidden'
+
+    const fallbackTimer = setTimeout(() => {
+      setStage('image')
+    }, 15000)
+
+    loadingTimerRef.current = setInterval(() => {
+      setLoadingIndex(prev => (prev + 1) % LOADING_MESSAGES.length)
+    }, 3000)
+
+    const handleCanPlayThrough = () => {
+      setPreloadComplete(true)
+      if (loadingTimerRef.current) {
+        clearInterval(loadingTimerRef.current)
+      }
+      clearTimeout(fallbackTimer)
+      setTimeout(() => {
+        setStage('image')
+      }, 800)
+    }
+
+    if (video) {
+      video.addEventListener('canplaythrough', handleCanPlayThrough)
+    }
+
     return () => {
       document.body.style.overflow = ''
+      if (loadingTimerRef.current) {
+        clearInterval(loadingTimerRef.current)
+      }
+      clearTimeout(fallbackTimer)
+      if (video) {
+        video.removeEventListener('canplaythrough', handleCanPlayThrough)
+      }
     }
   }, [])
 
@@ -89,7 +124,29 @@ export default function CurtainSection() {
     <section className="relative h-screen w-full overflow-hidden bg-white">
       <audio ref={audioRef} src="./assets/intro-music.mp3" loop preload="auto" />
 
-      {stage !== 'image' && (
+      {stage === 'loading' && (
+        <div style={{ transition: 'opacity 0.8s ease', opacity: preloadComplete ? 0 : 1 }}>
+          <img
+            src="./assets/curtain-closed.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ zIndex: 1 }}
+          />
+          <div className="absolute inset-0" style={{ zIndex: 2, backgroundColor: 'rgba(0, 0, 0, 0.55)' }} />
+          <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ zIndex: 3 }}>
+            <div className="flex flex-col items-center gap-6 px-6">
+              <div className="animate-icon-bounce text-gold/80">
+                {LOADING_MESSAGES[loadingIndex].icon}
+              </div>
+              <p className="font-display text-sm md:text-base tracking-[0.1em] text-center text-cream/90">
+                {LOADING_MESSAGES[loadingIndex].message}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {stage === 'video' && (
         <button
           type="button"
           onClick={toggleMute}

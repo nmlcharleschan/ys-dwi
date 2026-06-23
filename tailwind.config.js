@@ -29,6 +29,7 @@ export default {
         'fade-in': 'fadeIn 0.8s ease-out forwards',
         'scale-in': 'scaleIn 0.6s ease-out forwards',
         'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+        'icon-bounce': 'iconBounce 1.5s ease-in-out infinite',
       },
       keyframes: {
         fadeUp: {
@@ -46,6 +47,10 @@ export default {
         pulseSoft: {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.6' },
+        },
+        iconBounce: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
         },
       },
     },
