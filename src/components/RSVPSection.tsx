@@ -2,18 +2,24 @@ import { type FormEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 
+import { submitRSVP } from '@/services/sheets'
+import type { RSVPPayload } from '@/services/sheets'
+
 export default function RSVPSection() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [name, setName] = useState('')
   const [attending, setAttending] = useState<boolean | null>(null)
   const [transportNeeded, setTransportNeeded] = useState<boolean | null>(null)
   const [message, setMessage] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError('')
+    setSubmitError('')
 
     // Validate
     if (!name.trim()) {
@@ -25,15 +31,33 @@ export default function RSVPSection() {
       return
     }
 
-    setSubmitted(true)
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setSubmitted(false)
-      setName('')
-      setAttending(null)
-      setTransportNeeded(null)
-      setMessage('')
-    }, 3000)
+    // Submit to Google Sheets
+    setSubmitting(true)
+    try {
+      await submitRSVP({
+        name: name.trim(),
+        attending,
+        transportNeeded,
+        message,
+        language: i18n.language,
+      } satisfies RSVPPayload)
+
+      // Success — show thank you
+      setSubmitted(true)
+      setTimeout(() => {
+        setSubmitted(false)
+        setName('')
+        setAttending(null)
+        setTransportNeeded(null)
+        setMessage('')
+      }, 3000)
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : t('rsvp.submitError')
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -117,6 +141,7 @@ export default function RSVPSection() {
                 required
                 type="text"
                 value={name}
+                disabled={submitting}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t('rsvp.namePlaceholder')}
                 className="flex h-10 w-full border px-3 py-2 text-base rounded-xl bg-white/80 focus:outline-none focus:ring-2 focus:ring-burgundy/30 focus:border-burgundy"
@@ -135,6 +160,7 @@ export default function RSVPSection() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
+                  disabled={submitting}
                   onClick={() => setAttending(true)}
                   className="flex-1 py-3 px-4 rounded-xl border-2 font-body text-sm transition-all duration-200"
                   style={{
@@ -147,6 +173,7 @@ export default function RSVPSection() {
                 </button>
                 <button
                   type="button"
+                  disabled={submitting}
                   onClick={() => setAttending(false)}
                   className="flex-1 py-3 px-4 rounded-xl border-2 font-body text-sm transition-all duration-200"
                   style={{
@@ -168,6 +195,7 @@ export default function RSVPSection() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
+                  disabled={submitting}
                   onClick={() => setTransportNeeded(true)}
                   className="flex-1 py-3 px-4 rounded-xl border-2 font-body text-sm transition-all duration-200"
                   style={{
@@ -180,6 +208,7 @@ export default function RSVPSection() {
                 </button>
                 <button
                   type="button"
+                  disabled={submitting}
                   onClick={() => setTransportNeeded(false)}
                   className="flex-1 py-3 px-4 rounded-xl border-2 font-body text-sm transition-all duration-200"
                   style={{
@@ -204,6 +233,7 @@ export default function RSVPSection() {
               <textarea
                 id="message"
                 value={message}
+                disabled={submitting}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder={t('rsvp.messagePlaceholder')}
                 rows={3}
@@ -215,26 +245,55 @@ export default function RSVPSection() {
               />
             </div>
 
-            {/* Error */}
+            {/* Error — validation */}
             {error && (
               <p className="text-red-500 text-xs text-center">{error}</p>
+            )}
+
+            {/* Error — submission */}
+            {submitError && (
+              <p className="text-red-500 text-xs text-center">{submitError}</p>
             )}
 
             {/* Submit */}
             <button
               type="submit"
-              className="w-full py-3 px-6 rounded-xl font-body text-sm tracking-widest uppercase transition-all duration-200 flex items-center justify-center gap-2"
+              disabled={submitting}
+              className="w-full py-3 px-6 rounded-xl font-body text-sm tracking-widest uppercase transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60"
               style={{
                 backgroundColor: '#5C2018',
                 color: '#FFFFFF',
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <title>Confirm</title>
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-              </svg>
-              {t('rsvp.confirm')}
+              {submitting ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <title>Loading</title>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  {t('rsvp.submitting')}
+                </>
+              ) : submitError ? (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <title>Retry</title>
+                    <path d="M23 4v6h-6" />
+                    <path d="M1 20v-6h6" />
+                    <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+                  </svg>
+                  {t('rsvp.retry')}
+                </>
+              ) : (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <title>Confirm</title>
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                  {t('rsvp.confirm')}
+                </>
+              )}
             </button>
           </form>
         )}

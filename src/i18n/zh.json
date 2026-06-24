@@ -76,7 +76,10 @@
     "message": "給新人的祝福（選填）",
     "messagePlaceholder": "寫下幾句話...",
     "confirm": "確認",
-    "thankYouMessage": "感謝您的回覆！"
+    "thankYouMessage": "感謝您的回覆！",
+    "submitting": "發送中...",
+    "submitError": "提交失敗，請重試。",
+    "retry": "重試"
   },
   "qa": {
     "title": "常見問題",

@@ -76,7 +76,10 @@
     "message": "Message for the couple (optional)",
     "messagePlaceholder": "Write us a few words...",
     "confirm": "Confirm",
-    "thankYouMessage": "Thank you for your response!"
+    "thankYouMessage": "Thank you for your response!",
+    "submitting": "Sending...",
+    "submitError": "Failed to submit. Please try again.",
+    "retry": "Try Again"
   },
   "qa": {
     "title": "Q&A",
