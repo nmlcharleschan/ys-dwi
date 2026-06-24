@@ -42,15 +42,8 @@ export default function RSVPSection() {
         language: i18n.language,
       } satisfies RSVPPayload)
 
-      // Success — show thank you
+      // Success — show thank you permanently
       setSubmitted(true)
-      setTimeout(() => {
-        setSubmitted(false)
-        setName('')
-        setAttending(null)
-        setTransportNeeded(null)
-        setMessage('')
-      }, 3000)
     } catch (err) {
       setSubmitError(
         err instanceof Error ? err.message : t('rsvp.submitError')
